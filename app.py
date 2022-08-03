@@ -1,8 +1,9 @@
 
-from flask import jsonify
+from dataclasses import field
+from multiprocessing.sharedctypes import Value
 from pymongo import MongoClient 
 from datetime import datetime
-import traceback
+from ProductClass import Product
 
 
 # conexión a base de datos
@@ -25,31 +26,52 @@ def insertNewProduct(stock):
     insert = 's'
     while insert == 's':
         # ingreso del producto
-        admissionDate = datetime(now.year, now.month, now.day, 0, 0)
-        admissionDate.strftime('%Y/%m/%d')
         typeProduct = input("Naturaleza del producto: ").upper()
         name = input("Marca del producto: ").upper()
         productExpiration = input("Indique fecha de vencimiento: ")
         amount = int(input("Indique cantidad de producto ingresado: "))
         price = float(input("Ingrese precio del producto: "))
-        print(admissionDate, typeProduct, name, productExpiration, amount, price)
+        admissionDate = datetime(now.year, now.month, now.day, 0, 0)
+        admissionDate.strftime('%Y/%m/%d')
+        
         # registro en DB
         try:
-            stock.insert_one({
-                'admissionDate': admissionDate,
-                'typeProduct': typeProduct,
-                'name': name,
-                'productExpiration': productExpiration,
-                'amount': amount,
-                'price': price
-            })
-        except:
-            # error
-            return jsonify({'trace': traceback.format_exc})
+            NewProduct = Product(stock, admissionDate, typeProduct, name, productExpiration, amount, price)       
+            NewProduct.insertNewProduct()
+            insert = input("¿Desea ingresar otro producto? s/n: ")
+        except Exception as ex:
+            raise Exception(ex)
 
-        insert = input("¿Desea ingresar otro producto? s/n: ")
+
+def updateProduct(stock):
+    '''
+    Ingresar id y realizar un update de campos
+    '''            
+    # registro en DB
+    """ try:
+        
+    except Exception as ex:
+        raise Exception(ex) """
+
+
+def deleteProduct(stock):
+    '''
+    Ingresar id y realizar un update de campos
+    '''
+    idProduct = input("Ingresar id del producto: ")
+    # keyProduct = input("Ingresar clave del producto: ")
+    # valueProduct = input("Ingrear valor de la clave: ")
+
+    #print(idProduct, type(idProduct))
+    # Borrar producto de la BD
+    try:
+        stock.delete_one({'_id': { "objectId" : idProduct}})
+    except Exception as ex:
+        raise Exception(ex)  
 
 
 if __name__ == '__main__':
 
-    insertNewProduct(stock)
+    # insertNewProduct(stock)
+    # updateProduct(stock)
+    deleteProduct(stock)
