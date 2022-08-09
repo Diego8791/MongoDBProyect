@@ -5,7 +5,6 @@ from datetime import datetime
 
 
 def incomeNewProduct():
-
     '''
     Función para ingresar productos al stock de inventario
     '''
@@ -25,7 +24,9 @@ def incomeNewProduct():
         # fecha de admisión del producto
         admissionDate = datetime(now.year, now.month, now.day, 0, 0)
         admissionDate.strftime('%Y/%m/%d')
-        
+        productExpiration = datetime(now.year, now.month, now.day, 0, 0)
+        productExpiration.strftime('%Y/%m/%d')
+
         # registro en DB
         try:
             NewProduct = Product(barCod, admissionDate, typeProduct, name, productExpiration, amount, priceCost, priceSale)       
@@ -73,10 +74,29 @@ def deleteProduct():
         delProduct.deleteProduct(barCod)    
     except Exception as ex:
         raise Exception(ex)
-
+ 
        
+def saleProduct():
+    '''
+    Venta de artículos
+    '''
+    now = datetime.now()
+
+    barCod = int(input("Ingresar id del producto: "))
+    umountSale = -(int(input("Ingresar la cantidad: ")))
+    priceSale = float(input("Precio de venta: "))
+    saleDate = datetime(now.year, now.month, now.day, 0, 0)
+    saleDate.strftime('%Y/%m/%d')
+    try:
+        saleProd = Product(barCod=Any, admissionDate=Any, typeProduct=Any, name=Any, productExpiration=Any, amount=Any,priceCost=Any, priceSale=Any)
+        saleProd.saleProduct(barCod, umountSale, priceSale, saleDate)
+    except Exception as ex:
+        raise Exception(ex)
+
+
 if __name__ == '__main__':
 
-    incomeNewProduct()
+    # incomeNewProduct()
     # updateProduct()
     # deleteProduct()
+    saleProduct()

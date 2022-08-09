@@ -39,3 +39,12 @@ class Product:
     def deleteProduct(self, barCodPro):
         stock = conexionStock()
         stock.delete_one({'barCod': barCodPro})
+
+    def saleProduct(self, barCod, umontSale, priceSale, saleDate):
+        stock = conexionStock()
+        stock.insert_one({
+            'barCod': barCod,
+            'umontSale': umontSale,
+            'priceSale': priceSale,
+            'saleDate': saleDate
+        })
