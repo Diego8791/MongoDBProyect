@@ -1,10 +1,11 @@
 
-from datetime import datetime
 from typing import Any
 from ProductClass import Product
+from datetime import datetime
 
 
-def insertNewProduct():
+def incomeNewProduct():
+
     '''
     Función para ingresar productos al stock de inventario
     '''
@@ -17,10 +18,10 @@ def insertNewProduct():
         barCod = int(input("Ingresar código de barras: "))
         typeProduct = input("Naturaleza del producto: ").upper()
         name = input("Marca del producto: ").upper()
-        productExpiration = input("Indique fecha de vencimiento: ")
         amount = int(input("Indique cantidad de producto ingresado: "))
         priceCost = round(float(input("Ingrese precio de costo: ")), 2)
         priceSale = round(float(input('Indique precio ne venta: ')), 2)
+        productExpiration = input("Fecha de vencimiento: ")
         # fecha de admisión del producto
         admissionDate = datetime(now.year, now.month, now.day, 0, 0)
         admissionDate.strftime('%Y/%m/%d')
@@ -68,14 +69,14 @@ def deleteProduct():
     '''
     barCod = int(input("Ingresar id del producto: "))
     try:
-        delProduct = Product(barCod=Any, admissionDate=Any, typeProduct=Any, name=Any, productExpiration=Any, amount=Any,priceCost=Any, priceSale=Any)
+        delProduct = Product( barCod=Any, admissionDate=Any, typeProduct=Any, name=Any, productExpiration=Any, amount=Any,priceCost=Any, priceSale=Any)
         delProduct.deleteProduct(barCod)    
     except Exception as ex:
         raise Exception(ex)
 
-
+       
 if __name__ == '__main__':
 
-    # insertNewProduct()
+    incomeNewProduct()
     # updateProduct()
-    deleteProduct()
+    # deleteProduct()
