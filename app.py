@@ -1,23 +1,10 @@
 
-from dataclasses import field
-from multiprocessing.sharedctypes import Value
-from pymongo import MongoClient 
 from datetime import datetime
+from typing import Any
 from ProductClass import Product
 
 
-# conexión a base de datos
-MONGO_URI = 'mongodb://localhost'
-client = MongoClient(MONGO_URI)
-
-# iniciamos la base de datos
-db = client['store']
-
-# inicial la coleccion stock
-stock = db['products']
-
-
-def insertNewProduct(stock):
+def insertNewProduct():
     '''
     Función para ingresar productos al stock de inventario
     '''
@@ -25,53 +12,70 @@ def insertNewProduct(stock):
 
     insert = 's'
     while insert == 's':
+        print('------- I N G R E S O   D E   P R O D U C T O --------')
         # ingreso del producto
+        barCod = int(input("Ingresar código de barras: "))
         typeProduct = input("Naturaleza del producto: ").upper()
         name = input("Marca del producto: ").upper()
         productExpiration = input("Indique fecha de vencimiento: ")
         amount = int(input("Indique cantidad de producto ingresado: "))
-        price = float(input("Ingrese precio del producto: "))
+        priceCost = round(float(input("Ingrese precio de costo: ")), 2)
+        priceSale = round(float(input('Indique precio ne venta: ')), 2)
+        # fecha de admisión del producto
         admissionDate = datetime(now.year, now.month, now.day, 0, 0)
         admissionDate.strftime('%Y/%m/%d')
         
         # registro en DB
         try:
-            NewProduct = Product(stock, admissionDate, typeProduct, name, productExpiration, amount, price)       
+            NewProduct = Product(barCod, admissionDate, typeProduct, name, productExpiration, amount, priceCost, priceSale)       
             NewProduct.insertNewProduct()
             insert = input("¿Desea ingresar otro producto? s/n: ")
         except Exception as ex:
             raise Exception(ex)
 
 
-def updateProduct(stock):
+def updateProduct():
     '''
     Ingresar id y realizar un update de campos
     '''            
     # registro en DB
-    """ try:
-        
-    except Exception as ex:
-        raise Exception(ex) """
-
-
-def deleteProduct(stock):
-    '''
-    Ingresar id y realizar un update de campos
-    '''
-    idProduct = input("Ingresar id del producto: ")
-    # keyProduct = input("Ingresar clave del producto: ")
-    # valueProduct = input("Ingrear valor de la clave: ")
-
-    #print(idProduct, type(idProduct))
-    # Borrar producto de la BD
+    barCodPro = int(input('Código de barras: '))
+    item = input('ingresar clave de actualizacion: ')
+    valueItem = input('Indicar valor de clave: ')
+    # convertir precios en float
     try:
-        stock.delete_one({'_id': { "objectId" : idProduct}})
+        if item == 'priceCost' or item == 'priceSale':
+            valueItem = round(float(valueItem), 2)
+        elif item == 'name' or item == 'typeProduct':
+            valueItem = valueItem.upper()
+        elif item == 'amount':
+            valueItem = int(valueItem)
+        else:
+            pass
     except Exception as ex:
-        raise Exception(ex)  
+        raise Exception(ex) 
+    # update
+    try:
+        updProduct = Product(barCod=Any, admissionDate=Any, typeProduct=Any, name=Any, productExpiration=Any, amount=Any,priceCost=Any, priceSale=Any)
+        updProduct.updateProduct(barCodPro, item, valueItem)    
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def deleteProduct():
+    '''
+    Ingresar codigo de barras y borrar el articulo
+    '''
+    barCod = int(input("Ingresar id del producto: "))
+    try:
+        delProduct = Product(barCod=Any, admissionDate=Any, typeProduct=Any, name=Any, productExpiration=Any, amount=Any,priceCost=Any, priceSale=Any)
+        delProduct.deleteProduct(barCod)    
+    except Exception as ex:
+        raise Exception(ex)
 
 
 if __name__ == '__main__':
 
-    # insertNewProduct(stock)
-    # updateProduct(stock)
-    deleteProduct(stock)
+    # insertNewProduct()
+    # updateProduct()
+    deleteProduct()
